@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Gerenciador de Tarefas</title>
+    <h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+<h:body>
+    <h1>Gerenciador de Tarefas</h1>
+
+    <h:form>
+        <h2>Nova Tarefa</h2>
+        <h:panelGrid columns="2">
+            <h:outputLabel for="title" value="Título:"/>
+            <h:inputText id="title" value="#{taskBean.task.title}" required="true"/>
+
+            <h:outputLabel for="description" value="Descrição:"/>
+            <h:inputText id="description" value="#{taskBean.task.description}"/>
+
+            <h:outputLabel for="responsible" value="Responsável:"/>
+            <h:inputText id="responsible" value="#{taskBean.task.responsible}"/>
+
+            <h:outputLabel for="priority" value="Prioridade:"/>
+            <h:selectOneMenu id="priority" value="#{taskBean.task.priority}">
+                <f:selectItems value="#{taskBean.priorities}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+            </h:selectOneMenu>
+
+            <h:outputLabel for="deadline" value="Deadline:"/>
+            <h:inputText id="deadline" value="#{taskBean.task.deadline}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:inputText>
+        </h:panelGrid>
+        <h:commandButton value="Salvar" action="#{taskBean.save}"/>
+    </h:form>
+
+    <h:messages globalOnly="true"/>
+
+    <h2>Filtrar Tarefas</h2>
+    <h:form>
+        <h:panelGrid columns="2">
+            <h:outputLabel for="filterTitle" value="Título:"/>
+            <h:inputText id="filterTitle" value="#{taskBean.filterTitle}"/>
+
+            <h:outputLabel for="filterResponsible" value="Responsável:"/>
+            <h:inputText id="filterResponsible" value="#{taskBean.filterResponsible}"/>
+
+            <h:outputLabel for="filterPriority" value="Prioridade:"/>
+            <h:selectOneMenu id="filterPriority" value="#{taskBean.filterPriority}">
+                <f:selectItem itemLabel="-- Selecione --" itemValue=""/>
+                <f:selectItems value="#{taskBean.priorities}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+            </h:selectOneMenu>
+
+            <h:outputLabel for="filterDeadline" value="Deadline:"/>
+            <h:inputText id="filterDeadline" value="#{taskBean.filterDeadline}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:inputText>
+        </h:panelGrid>
+        <h:commandButton value="Filtrar" action="#{taskBean.filterTasks}"/>
+        <h:commandButton value="Limpar Filtro" action="#{taskBean.loadTasks}" immediate="true"/>
+    </h:form>
+
+    <h2>Lista de Tarefas</h2>
+    <h:dataTable value="#{taskBean.tasks}" var="task" border="1">
+        <h:column>
+            <f:facet name="header">ID</f:facet>
+            #{task.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Título</f:facet>
+            #{task.title}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Descrição</f:facet>
+            #{task.description}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Responsável</f:facet>
+            #{task.responsible}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Prioridade</f:facet>
+            #{task.priority}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Deadline</f:facet>
+            <h:outputText value="#{task.deadline}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Status</f:facet>
+            #{task.status}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Ações</f:facet>
+            <h:commandLink value="Editar" action="#{taskBean.edit(task)}"/>
+            <h:outputText value=" "/>
+            <h:commandLink value="Remover" action="#{taskBean.delete(task.id)}" onclick="return confirm('Tem certeza que deseja remover esta tarefa?');"/>
+            <h:outputText value=" "/>
+            <h:commandLink value="Concluir" action="#{taskBean.completeTask(task)}" rendered="#{task.status eq 'EM_ANDAMENTO'}"/>
+        </h:column>
+    </h:dataTable>
+</h:body>
+</html>
+
+

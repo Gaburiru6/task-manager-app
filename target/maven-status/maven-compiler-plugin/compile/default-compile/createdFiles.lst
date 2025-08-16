@@ -1,0 +1,5 @@
+com\esig\taskmanager\dao\TaskDAO.class
+com\esig\taskmanager\model\Task$Priority.class
+com\esig\taskmanager\model\Task$Status.class
+com\esig\taskmanager\model\Task.class
+com\esig\taskmanager\servlet\TaskServlet.class
